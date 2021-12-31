@@ -1,7 +1,10 @@
 # SwiftUITodoList
 Implemented a ToDo List using MongoDB Realm with SwiftUI
 
-https://user-images.githubusercontent.com/66363530/147811335-bf417458-79cf-490f-9230-6c7262d016b4.MP4
+<p align="center">
+    <source src = " https://user-images.githubusercontent.com/66363530/147811335-bf417458-79cf-490f-9230-6c7262d016b4.MP4" type "video/mp4">
+</p>
+
 
 ## Motivation 
 Previsouly used other databases such as User Defaults and Firestore on different project and wated to explore MongoDB Realm as a different alternative. Built this simple app to test this database and further explore SwiftUI. 
