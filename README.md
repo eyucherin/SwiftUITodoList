@@ -2,7 +2,7 @@
 Implemented a ToDo List using MongoDB Realm with SwiftUI
 
 <p align="center">
-    <source src = " https://user-images.githubusercontent.com/66363530/147811335-bf417458-79cf-490f-9230-6c7262d016b4.MP4" type "video/mp4">
+    <source src = "https://user-images.githubusercontent.com/66363530/147811335-bf417458-79cf-490f-9230-6c7262d016b4.MP4" type "video/mp4">
 </p>
 
 
