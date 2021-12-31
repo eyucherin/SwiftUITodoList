@@ -169,7 +169,25 @@ class RealmManager : ObservableObject{
 
 ```
 
-5. implementing tap Genstures
+5. @Persisted keyword and Schema: Schemas are models that each object should follow. Each variable will have to be implemented with the @Persisted Property wrapper so that it can identofy as keys to the Realm. 
+
+
+```swift
+import Foundation
+import RealmSwift
+
+class Task: Object, ObjectKeyIdentifiable{
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var title = ""
+    @Persisted var completed = false
+}
+
+```
+
+
+
+
+6. implementing tap Genstures
 ```swift
 Text("Hello, World!")
     .onTapGesture(count: 2) {
@@ -177,7 +195,7 @@ Text("Hello, World!")
     }
 ```
 
-6. implenting swipe Gestures
+7. implenting swipe Gestures
 ```swift
      List{
         ForEach(realmManager.tasks, id:\.id){ task in
