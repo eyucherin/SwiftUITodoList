@@ -1,10 +1,7 @@
 # SwiftUITodoList
 Implemented a ToDo List using MongoDB Realm with SwiftUI
 
-<p align="center">
-    <source src = "https://user-images.githubusercontent.com/66363530/147811335-bf417458-79cf-490f-9230-6c7262d016b4.MP4" type "video/mp4">
-</p>
-
+https://user-images.githubusercontent.com/66363530/147812725-8000b958-f932-415f-bb53-7c8373841b5a.MP4
 
 ## Motivation 
 Previsouly used other databases such as User Defaults and Firestore on different project and wated to explore MongoDB Realm as a different alternative. Built this simple app to test this database and further explore SwiftUI. 
@@ -67,6 +64,141 @@ struct SheetView: View {
 
 ```
 
+3. Data Persistence Using MonogDB and implementing CRUD: Allows for users to create, rad, update, and delete data from database 
+```swift
+import Foundation
+import RealmSwift
+
+class RealmManager : ObservableObject{
+    
+    private(set) var localRealm: Realm?
+    @Published private(set) var tasks: [Task] = []
+    
+    init(){
+        openRealm()
+        getTask()
+    }
+    
+    func openRealm(){
+        do{
+            let config = Realm.Configuration(schemaVersion: 1)
+            Realm.Configuration.defaultConfiguration = config
+            
+            localRealm = try Realm()
+        }catch{
+            print("Error Opening Realm")
+        }
+    }
+    
+    func addTask(taskTitle: String){
+        if let localRealm = localRealm {
+            do{
+                try localRealm.write{
+                    let newTask = Task(value: ["title":taskTitle, "completed":false])
+                    localRealm.add(newTask)
+                    getTask()
+                    print("Added new task to Realm \(newTask)")
+                }
+            }catch{
+                print("Error Adding task \(taskTitle) from Realm: \(error)")
+            }
+        }
+    }
+    
+    func getTask(){
+        if let localRealm = localRealm{
+            let allTasks = localRealm.objects(Task.self).sorted(byKeyPath: "completed")
+            tasks = []
+            allTasks.forEach{task in
+                tasks.append(task)
+                
+            }
+            
+        }
+    }
+    
+    func updateTask(id:ObjectId, completed: Bool){
+        if let localRealm = localRealm {
+            do{
+               let taskToUpdate =  localRealm.objects(Task.self).filter(NSPredicate(format: "id == %@",id))
+                guard !taskToUpdate.isEmpty else{return}
+                
+                try localRealm.write{
+                    taskToUpdate[0].completed = completed
+                    getTask()
+                    print("Updated taks Compled with id \(id). Completed status \(completed)")
+                }
+                
+            }catch{
+                print("Error updating task \(id) from Realm: \(error)")
+            }
+        }
+    }
+    
+    func deleteTask(id:ObjectId){
+        if let localRealm = localRealm {
+            do{
+                let taskToDelete =  localRealm.objects(Task.self).filter(NSPredicate(format: "id == %@",id))
+                guard !taskToDelete.isEmpty else{return}
+                
+                try localRealm.write{
+                    localRealm.delete(taskToDelete)
+                    getTask()
+                    print("Deleted Task with id \(id)")
+                }
+            }catch{
+                print("Error Deleting task \(id) from Realm: \(error)")
+                
+            }
+        }
+    }
+}
+
+```
+4. Using private(set) variables: only allows you to set and make changes to this variable within the class it is called in 
+
+```swift
+import Foundation
+import RealmSwift
+
+class RealmManager : ObservableObject{
+    
+    private(set) var localRealm: Realm?
+    
+ ....
+
+```
+
+5. implementing tap Genstures
+```swift
+Text("Hello, World!")
+    .onTapGesture(count: 2) {
+        print("Double tapped!")
+    }
+```
+
+6. implenting swipe Gestures
+```swift
+     List{
+        ForEach(realmManager.tasks, id:\.id){ task in
+            if !task.isInvalidated{
+                TaskRow(completed: task.completed, task: task.title)
+                    .onTapGesture {
+                        realmManager.updateTask(id: task.id, completed: !task.completed)
+                    }
+                    .swipeActions(edge: .trailing){
+                        Button(role:.destructive){
+                            realmManager.deleteTask(id: task.id)
+                        }label:{
+                            Label("Delete", systemImage: "trash")
+                        }
+
+                    }
+            }
 
 
-
+        }
+        .listRowSeparator(.hidden)
+                
+      }
+```
