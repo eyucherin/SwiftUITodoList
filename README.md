@@ -64,7 +64,7 @@ struct SheetView: View {
 
 ```
 
-3. Data Persistence Using MonogDB and implementing CRUD: Allows for users to create, rad, update, and delete data from database 
+3. Data Persistence Using MonogDB and implementing CRUD: Allows for users to create, run, update, and delete data from database 
 ```swift
 import Foundation
 import RealmSwift
